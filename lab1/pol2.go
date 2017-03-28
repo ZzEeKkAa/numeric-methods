@@ -1,10 +1,12 @@
 package main
 
 import (
+	"math"
+
 	"github.com/alanwj/go-poly"
 )
 
-func BuildPol2(pol poly.Poly, a, b float64) poly.Poly {
+func BuildPol2(pol poly.Poly, a, b float64) (poly.Poly, float64) {
 	t := poly.New(0, -3, 0, 4)
 	t = MovePol(t, poly.New((a-b)/(a+b), 2/(a+b)))
 	d := pol.Coeff(t.Deg()) / t.Coeff(t.Deg())
@@ -14,7 +16,7 @@ func BuildPol2(pol poly.Poly, a, b float64) poly.Poly {
 	}
 
 	res := pol.Sub(poly.New(coeff...))
-	return res
+	return res, math.Abs(3 * pol.Coeff(3))
 }
 
 func MovePol(p, q poly.Poly) poly.Poly {

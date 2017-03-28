@@ -7,7 +7,7 @@ import (
 	"github.com/alanwj/go-poly"
 )
 
-func BuildPol1(pol poly.Poly, a, b float64) poly.Poly {
+func BuildPol1(pol poly.Poly, a, b float64) (poly.Poly, float64) {
 	fa := pol.Eval(a)
 	fb := pol.Eval(b)
 	c := (fa - fb) / (a - b)
@@ -22,7 +22,7 @@ func BuildPol1(pol poly.Poly, a, b float64) poly.Poly {
 	} else {
 		log.Println("No solution in [a,b]")
 	}
-	return poly.New(d, c)
+	return poly.New(d, c), math.Abs(fa - c*a - d)
 }
 
 func Sol(pol poly.Poly) (x1, x2 float64) {
