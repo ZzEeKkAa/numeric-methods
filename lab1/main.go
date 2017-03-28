@@ -20,7 +20,7 @@ func main() {
 	pol0 := BuildPol0(pol, a, b)
 	pol1 := BuildPol1(pol, a, b)
 	pol2 := BuildPol2(pol, a, b)
-	pol3 := BuildTrig(pol, a, b)
+	pol3 := BuildTrig(pol, a, b, 15)
 
 	fPol := plotter.NewFunction(pol.Eval)
 	fPol.Color = color.RGBA{R: 255, G: 0, B: 0, A: 1}
