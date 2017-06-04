@@ -1,10 +1,8 @@
 package main
 
 import (
-	"log"
-
 	"flag"
-
+	"log"
 	"math"
 
 	poly "github.com/alanwj/go-poly"
@@ -20,29 +18,33 @@ var (
 func main() {
 	flag.Parse()
 
-	n := 4
+	n := 6
 	// Set function to calculate // int[0,inf](x^alpha * e^(-x) * f(x) dx
-	alpha := 1.
+	alpha := 0.
 	f := func(x float64) float64 {
-		return 1 / (1 + math.Exp(-x) + math.Exp(-2*x))
+		return x / (1 + math.Exp(-x) + math.Exp(-2*x))
 	}
 
 	l := getLager(n, alpha)
 	log.Printf("L[%d,%.6f] = %s\n", n, alpha, l.String())
 	roots := findRoots(l, *eps)
 	log.Println(roots)
-	res := 0.
+	res := 0.0
 
+	l1 := getLager(n+1, alpha)
 	for _, xk := range roots {
-		ck := getLagerC(l, xk, alpha)
-		log.Print(ck, " * ", f(xk), " + ")
-		res += ck * f(xk)
+		ck := getLagerC(l1, xk, alpha)
+		log.Printf("%.4f * %.4f +", ck, f(xk))
+		res += ck * f(xk) //* math.Pow(xk, alpha) * math.Exp(-xk)
 	}
+	res /= float64(n)
 
 	log.Println("I = ", res)
 }
 
 func getLagerC(p poly.Poly, x float64, alpha float64) float64 {
+	log.Println(p.Deg())
+	return x / math.Pow(float64(p.Deg())*p.Eval(x), 2)
 	//log.Println(x)
 	res := gamma(alpha+float64(p.Deg())+1) / x
 	//log.Println(res)
@@ -95,14 +97,18 @@ func findRoots(p poly.Poly, eps float64) []float64 {
 }
 
 func findRoot(p poly.Poly, a, b, eps float64) float64 {
+	log.Println("input:", a, b)
 	if p.Eval(a)*p.Eval(b) > 0 {
 		log.Fatal("There is no roots of polinomial at [", a, b, "]")
 	}
 	if p.Eval(a) > 0 {
 		a, b = b, a
 	}
+	log.Println("here")
 	m := (b + a) / 2
-	for 2*(b-a) > eps {
+	for 0.01*(b-a) > eps {
+		log.Println(a, b)
+		log.Println(p.Eval(a), p.Eval(b))
 		m = (b + a) / 2
 		if p.Eval(m) > 0 {
 			b = m
